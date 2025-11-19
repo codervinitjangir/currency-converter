@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MyCurrencyConverter - Professional Exchange Tool</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <nav>
+      <div class="logo">MyCurrencyConverter</div>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About Us</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="container">
+      <h1>Convert Currencies with Ease</h1>
+      <form action="/action.php" method="get">
+        <div>
+          <label for="quantity">Enter Quantity:</label>
+          <input
+            type="number"
+            id="quantity"
+            name="quantity"
+            min="1"
+            max="1000000"
+            value="1"
+            placeholder="e.g., 100"
+          />
+        </div>
+        <div>
+          <label for="currency">Select Base Currency:</label>
+          <select id="currency" name="currency">
+            <option value="INR">Indian Rupee (INR)</option>
+            <option value="USD" selected>US Dollar (USD)</option>
+            <option value="EUR">Euro (EUR)</option>
+            <option value="GBP">British Pound (GBP)</option>
+            <option value="JPY">Japanese Yen (JPY)</option>
+          </select>
+        </div>
+        <button class="btn" type="submit">Get Conversion</button>
+      </form>
+
+      <div class="output">
+        <h2>Converted Values in Other Currencies</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Currency Name</th>
+              <th>Code</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Indian Rupee</td>
+              <td>INR</td>
+              <td>82.50</td>
+            </tr>
+            <tr>
+              <td>Euro</td>
+              <td>EUR</td>
+              <td>0.92</td>
+            </tr>
+            <tr>
+              <td>British Pound</td>
+              <td>GBP</td>
+              <td>0.79</td>
+            </tr>
+            <tr>
+              <td>Japanese Yen</td>
+              <td>JPY</td>
+              <td>150.25</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <footer>
+      Copyright &copy; <span id="year"></span> MyCurrencyConverter. All rights
+      reserved.
+    </footer>
+
+    <script>
+      // Automatically update the current year in the footer
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      // Temporarily show the output table for design purposes
+      document.querySelector(".output").style.display = "block";
+    </script>
+    </body>
+</html>
