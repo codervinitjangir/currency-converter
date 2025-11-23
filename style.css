@@ -1,15 +1,40 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@400;600;700&display=swap");
-
+/* ================================
+   1. Global Reset & Variables
+================================ */
 :root {
-  --primary-color: #2c3e50;
-  --secondary-color: #3498db;
-  --accent-color: #e74c3c;
-  --bg-light: #ecf0f1;
-  --bg-dark: #bdc3c7;
-  --text-dark: #2c3e50;
-  --text-light: #ffffff;
-  --border-radius: 8px;
-  --transition-speed: 0.3s ease;
+  --bg-dark: #0a0e17;
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --input-bg: rgba(0, 0, 0, 0.2);
+  --input-text: #ffffff;
+  --card-bg: rgba(255, 255, 255, 0.03);
+  --card-hover: rgba(255, 255, 255, 0.08);
+
+  --primary: #6366f1; /* Indigo */
+  --accent: #ec4899;  /* Pink */
+  --success: #10b981;
+  --danger: #ef4444;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+
+  --font-main: 'Inter', sans-serif;
+  --font-display: 'Outfit', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-dark: #f0f4f8; /* Slightly darker white for contrast */
+  --glass-bg: rgba(255, 255, 255, 0.85); /* More opaque */
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --input-bg: rgba(0, 0, 0, 0.04);
+  --input-text: #1e293b;
+  --card-bg: rgba(0, 0, 0, 0.03);
+  --card-hover: rgba(0, 0, 0, 0.06);
+  
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --primary: #4f46e5;
 }
 
 * {
@@ -19,294 +44,487 @@
 }
 
 body {
-  font-family: "Roboto", sans-serif;
-  background-color: var(--bg-light);
-  color: var(--text-dark);
-  line-height: 1.6;
-}
-
-/* --- Navigation Bar --- */
-nav {
-  font-family: "Montserrat", sans-serif;
-  font-weight: 700;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 1.25rem;
-  background-color: var(--primary-color);
-  color: var(--text-light);
-  padding: 1rem 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-nav .logo {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--text-light);
-  letter-spacing: 0.5px;
-  margin: 0;
-}
-
-nav ul {
-  display: flex;
-  list-style: none;
-  margin: 0;
-}
-
-nav ul li {
-  margin: 0 1rem;
-}
-
-nav li a {
-  text-decoration: none;
-  color: var(--text-light);
-  padding: 0.5rem 0;
+  font-family: var(--font-main);
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
   position: relative;
-  transition: color var(--transition-speed);
+  transition: background-color 0.3s, color 0.3s;
 }
 
-nav li a::after {
-  content: "";
-  position: absolute;
+/* ================================
+   2. Background Blobs (Ambient)
+================================ */
+.background-blobs {
+  position: fixed;
+  top: 0;
   left: 0;
-  bottom: 0;
-  width: 0;
-  height: 2px;
-  background-color: var(--secondary-color);
-  transition: width var(--transition-speed);
-}
-
-nav li a:hover {
-  color: var(--secondary-color);
-}
-
-nav li a:hover::after {
   width: 100%;
-}
-
-/* --- Main Container --- */
-.container {
-  min-height: calc(100vh - 120px);
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background-color: #ffffff;
-  border-radius: var(--border-radius);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-.container h1,
-.container h2 {
-  font-family: "Montserrat", sans-serif;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  color: var(--primary-color);
-  text-align: center;
-}
-
-/* --- Form Styling --- */
-.container form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  max-width: 400px;
-  margin: 0 auto 2rem auto;
-}
-
-.container form label {
-  font-size: 1.1rem;
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-  display: block;
-}
-
-.container form input[type="number"],
-.container form select {
-  font-size: 1rem;
-  padding: 0.75rem 1rem;
-  width: 100%;
-  border: 1px solid var(--bg-dark);
-  border-radius: var(--border-radius);
-  background-color: var(--bg-light);
-  transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
-.container form input[type="number"]:focus,
-.container form select:focus {
-  border-color: var(--secondary-color);
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-  outline: none;
-  background-color: #ffffff;
-}
-
-/* --- Button Styling --- */
-.btn {
-  padding: 0.75rem 1.5rem;
-  font-size: 1.1rem;
-  background: var(--secondary-color);
-  color: var(--text-light);
-  border: none;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  transition: background-color var(--transition-speed), transform var(--transition-speed);
-  font-weight: 600;
-  align-self: center;
-  width: auto;
-  min-width: 150px;
-}
-
-.btn:hover {
-  background-color: #2980b9;
-  transform: translateY(-2px);
-}
-
-.btn:active {
-  transform: translateY(0);
-}
-
-/* --- Output Table Styling --- */
-.output {
-  margin-top: 3rem;
-}
-
-.output h2 {
-  margin-bottom: 1.5rem;
-}
-
-.output table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 0 auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  border-radius: var(--border-radius);
+  height: 100%;
+  z-index: -1;
   overflow: hidden;
 }
 
-.output table th,
-.output table td {
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  animation: float 10s infinite ease-in-out;
+}
+
+.blob-1 {
+  width: 400px;
+  height: 400px;
+  background: var(--primary);
+  top: -100px;
+  left: -100px;
+}
+
+.blob-2 {
+  width: 500px;
+  height: 500px;
+  background: var(--accent);
+  bottom: -150px;
+  right: -100px;
+  animation-delay: 2s;
+}
+
+.blob-3 {
+  width: 300px;
+  height: 300px;
+  background: #3b82f6;
+  top: 40%;
+  left: 30%;
+  opacity: 0.2;
+  animation-delay: 4s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(30px, -30px); }
+}
+
+/* ================================
+   3. Glass Components
+================================ */
+.glass-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 5%;
+  background: rgba(10, 14, 23, 0.7);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+[data-theme="light"] .glass-nav {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: var(--glass-shadow);
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+/* ================================
+   4. Typography & Elements
+================================ */
+.logo {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.highlight {
+  color: var(--primary);
+}
+
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav-links a.active,
+.nav-links a:hover {
+  color: var(--text-main);
+}
+
+.btn-connect {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--glass-border);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-connect:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.small {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+}
+
+/* ================================
+   5. Dashboard Layout
+================================ */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 3rem 5%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.top-section {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 2rem;
+  width: 100%;
+}
+
+/* ================================
+   6. Converter Section
+================================ */
+.converter-section {
+  width: 100%;
+}
+
+.slider-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 500px; /* Match converter height approx */
+}
+
+.bottom-section {
+  width: 100%;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.card-header h2, .card-header h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.live-badge {
+  font-size: 0.75rem;
+  color: var(--success);
+  background: rgba(16, 185, 129, 0.1);
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.currency-input-group {
+  background: var(--input-bg);
+  border-radius: 16px;
+  padding: 1.2rem;
+  border: 1px solid transparent;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.currency-input-group:focus-within {
+  border-color: var(--primary);
+}
+
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.input-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+input[type="number"],
+input[type="text"] {
+  background: transparent;
+  border: none;
+  color: var(--input-text);
+  font-size: 1.8rem;
+  font-weight: 600;
+  width: 60%;
+  font-family: var(--font-display);
+  transition: color 0.3s;
+}
+
+input:focus {
+  outline: none;
+}
+
+.select-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: var(--glass-bg);
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  cursor: pointer;
+  min-width: 140px;
+  position: relative;
+  border: 1px solid var(--glass-border);
+}
+
+.flag-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+select {
+  background: transparent;
+  border: none;
+  color: var(--input-text);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  appearance: none;
+  transition: color 0.3s;
+}
+
+select option {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+}
+
+select:focus {
+  outline: none;
+}
+
+/* Swap Button */
+.swap-container {
+  display: flex;
+  justify-content: center;
+  margin: -1rem 0;
+  position: relative;
+  z-index: 10;
+}
+
+.btn-icon {
+  background: var(--glass-bg);
+  border: 2px solid var(--glass-border);
+  color: var(--primary);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.3s, background 0.3s, border-color 0.3s;
+}
+
+.btn-icon:hover {
+  transform: rotate(180deg);
+  border-color: var(--primary);
+}
+
+/* Rate Info */
+.rate-info {
+  display: flex;
+  justify-content: space-between;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* Main Action Button */
+.btn-primary {
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: white;
+  border: none;
+  padding: 1.2rem;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+}
+
+.glow-effect {
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+}
+
+/* ================================
+   7. Live Rate Slider
+================================ */
+.slider-container {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+}
+
+.slider-track {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: scrollUp 30s linear infinite; /* Slower animation for readability */
+}
+
+.slider-track:hover {
+  animation-play-state: paused;
+}
+
+.slider-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 1rem;
-  text-align: left;
-  border-bottom: 1px solid var(--bg-dark);
+  background: var(--card-bg);
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  transition: background 0.3s;
+}
+
+.slider-item:hover {
+  background: var(--card-hover);
+}
+
+.pair-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.pair-info .code {
+  font-weight: 700;
+  color: var(--text-main);
   font-size: 1rem;
 }
 
-.output table th {
-  background-color: var(--primary-color);
-  color: var(--text-light);
+.pair-info .name {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.slider-item .rate {
+  font-family: var(--font-display);
+  color: var(--primary);
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-size: 1.1rem;
 }
 
-.output table tbody tr:nth-child(even) {
-  background-color: var(--bg-light);
+@keyframes scrollUp {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
 }
 
-.output table tbody tr:hover {
-  background-color: var(--bg-dark);
+/* ================================
+   8. Chart & Stats Section
+================================ */
+.chart-card {
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+}
+
+.time-filters {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--input-bg);
+  padding: 0.3rem;
+  border-radius: 12px;
+}
+
+.filter-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
-/* --- Footer --- */
-footer {
-  font-family: "Roboto", sans-serif;
-  text-align: center;
-  padding: 1.5rem;
-  background-color: var(--primary-color);
-  color: var(--bg-light);
-  font-size: 0.9rem;
-  margin-top: 2rem;
-  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
+.filter-btn.active,
+.filter-btn:hover {
+  background: var(--glass-bg);
+  color: var(--text-main);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* --- Responsive Design --- */
-@media (max-width: 768px) {
-  nav {
-    flex-direction: column;
-    padding: 1rem;
-    font-size: 1rem;
-  }
-
-  nav .logo {
-    margin-bottom: 1rem;
-    font-size: 1.4rem;
-  }
-
-  nav ul {
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-  }
-
-  nav ul li {
-    margin: 0.5rem 0;
-    width: 100%;
-    text-align: center;
-  }
-
-  nav li a {
-    display: block;
-    padding: 0.5rem 0;
-  }
-
-  nav li a::after {
-    bottom: -5px;
-  }
-
-  .container {
-    max-width: 95vw;
-    margin: 1rem auto;
-    padding: 1rem;
-  }
-
-  .container h1,
-  .container h2 {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-  }
-
-  .container form {
-    max-width: 100%;
-    gap: 1rem;
-  }
-
-  .container form label {
-    font-size: 1rem;
-  }
-
-  .container form input[type="number"],
-  .container form select {
-    font-size: 0.95rem;
-    padding: 0.6rem 0.8rem;
-  }
-
-  .btn {
-    width: 100%;
-    min-width: unset;
-    font-size: 1rem;
-    padding: 0.6rem 1rem;
-  }
-
-  .output table th,
-  .output table td {
-    padding: 0.75rem;
-    font-size: 0.9rem;
-  }
+.chart-container {
+  flex: 1;
+  position: relative;
+  width: 100%;
 }
 
-@media (max-width: 480px) {
-  nav .logo {
-    font-size: 1.2rem;
+/* ================================
+   9. Responsive
+================================ */
+@media (max-width: 900px) {
+  .top-section {
+    grid-template-columns: 1fr;
+  }
+  
+  .dashboard-container {
+    padding: 1.5rem;
   }
 
-  .container h1 {
-    font-size: 1.5rem;
-  }
-
-  .container h2 {
-    font-size: 1.2rem;
+  .nav-links {
+    display: none;
   }
 }
