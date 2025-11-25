@@ -11,8 +11,8 @@
   --card-bg: rgba(255, 255, 255, 0.03);
   --card-hover: rgba(255, 255, 255, 0.08);
 
-  --primary: #6366f1; /* Indigo */
-  --accent: #ec4899;  /* Pink */
+  --primary: #6366f1;
+  --accent: #ec4899;
   --success: #10b981;
   --danger: #ef4444;
   --text-main: #f8fafc;
@@ -23,8 +23,8 @@
 }
 
 [data-theme="light"] {
-  --bg-dark: #f0f4f8; /* Slightly darker white for contrast */
-  --glass-bg: rgba(255, 255, 255, 0.85); /* More opaque */
+  --bg-dark: #f0f4f8;
+  --glass-bg: rgba(255, 255, 255, 0.85);
   --glass-border: rgba(0, 0, 0, 0.08);
   --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   --input-bg: rgba(0, 0, 0, 0.04);

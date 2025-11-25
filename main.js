@@ -46,7 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
 function setupEventListeners() {
   // Amount Input (Debounced)
   els.amount.addEventListener('input', (e) => {
-    state.amount = parseFloat(e.target.value) || 0;
+    const val = parseFloat(e.target.value);
+    state.amount = isNaN(val) ? 0 : val;
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(updateExchangeRate, 300);
   });
@@ -69,6 +70,7 @@ function setupEventListeners() {
     // Update UI
     els.from.value = state.from;
     els.to.value = state.to;
+    
     // Animate icon
     const icon = els.swap.querySelector('svg');
     icon.style.transform = 'rotate(180deg)';
@@ -127,8 +129,13 @@ async function loadCurrencies() {
 }
 
 async function updateExchangeRate() {
+  if (state.amount === 0) {
+    els.result.value = '0.00';
+    return;
+  }
+
   if (state.from === state.to) {
-    els.result.value = state.amount;
+    els.result.value = state.amount.toFixed(2);
     els.rate.textContent = '1.0000';
     return;
   }
@@ -243,7 +250,7 @@ function initChart() {
         backgroundColor: gradient,
         borderWidth: 2,
         pointRadius: 0,
-        pointHoverRadius: 4,
+        pointHoverRadius: 6,
         fill: true,
         tension: 0.4
       }]
@@ -251,12 +258,18 @@ function initChart() {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
+      plugins: { 
+        legend: { display: false },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+        }
+      },
       scales: {
         x: { display: false },
         y: { display: true, grid: { color: 'rgba(255,255,255,0.05)' } }
       },
-      interaction: { mode: 'nearest', axis: 'x', intersect: false }
+      interaction: { mode: 'index', intersect: false }
     }
   });
 }
