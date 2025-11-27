@@ -8,7 +8,7 @@ let debounceTimer = null;
 
 // State
 const state = {
-  amount: 1,
+  amount: 0,
   from: 'USD',
   to: 'INR',
   currencies: {},
@@ -49,7 +49,7 @@ function setupEventListeners() {
     const val = parseFloat(e.target.value);
     state.amount = isNaN(val) ? 0 : val;
     clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(updateExchangeRate, 300);
+    debounceTimer = setTimeout(updateExchangeRate, 500);
   });
 
   // Currency Selects
