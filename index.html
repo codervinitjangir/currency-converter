@@ -3,95 +3,132 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MyCurrencyConverter - Professional Exchange Tool</title>
+    <title>FluxCurrency - Live Exchange Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <nav>
-      <div class="logo">MyCurrencyConverter</div>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/about">About Us</a></li>
-        <li><a href="/contact">Contact</a></li>
-      </ul>
-    </nav>
-
-    <div class="container">
-      <h1>Convert Currencies with Ease</h1>
-      <form action="/action.php" method="get">
-        <div>
-          <label for="quantity">Enter Quantity:</label>
-          <input
-            type="number"
-            id="quantity"
-            name="quantity"
-            min="1"
-            max="1000000"
-            value="1"
-            placeholder="e.g., 100"
-          />
-        </div>
-        <div>
-          <label for="currency">Select Base Currency:</label>
-          <select id="currency" name="currency">
-            <option value="INR">Indian Rupee (INR)</option>
-            <option value="USD" selected>US Dollar (USD)</option>
-            <option value="EUR">Euro (EUR)</option>
-            <option value="GBP">British Pound (GBP)</option>
-            <option value="JPY">Japanese Yen (JPY)</option>
-          </select>
-        </div>
-        <button class="btn" type="submit">Get Conversion</button>
-      </form>
-
-      <div class="output">
-        <h2>Converted Values in Other Currencies</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Currency Name</th>
-              <th>Code</th>
-              <th>Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Indian Rupee</td>
-              <td>INR</td>
-              <td>82.50</td>
-            </tr>
-            <tr>
-              <td>Euro</td>
-              <td>EUR</td>
-              <td>0.92</td>
-            </tr>
-            <tr>
-              <td>British Pound</td>
-              <td>GBP</td>
-              <td>0.79</td>
-            </tr>
-            <tr>
-              <td>Japanese Yen</td>
-              <td>JPY</td>
-              <td>150.25</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <div class="background-blobs">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
     </div>
 
-    <footer>
-      Copyright &copy; <span id="year"></span> MyCurrencyConverter. All rights
-      reserved.
-    </footer>
+    <!-- Glass Navbar -->
+    <nav class="glass-nav">
+      <div class="logo">Flux<span class="highlight">Currency</span>.</div>
+      <div class="nav-right">
+        <ul class="nav-links">
+          <li><a href="#" class="active">Dashboard</a></li>
+          <li><a href="#markets">Markets</a></li>
+        </ul>
 
-    <script>
-      // Automatically update the current year in the footer
-      document.getElementById("year").textContent = new Date().getFullYear();
+        <button id="theme-toggle" class="btn-icon small">
+          <!-- Sun Icon (Default for Dark) -->
+          <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <!-- Moon Icon (Hidden by default) -->
+          <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </div>
+    </nav>
 
-      // Temporarily show the output table for design purposes
-      document.querySelector(".output").style.display = "block";
-    </script>
-    </body>
+    <main class="dashboard-container">
+      <!-- Top Section: Split Layout -->
+      <div class="top-section">
+        <!-- Left: Converter -->
+        <section class="glass-card converter-section">
+          <div class="card-header">
+            <h2>Exchange</h2>
+            <span class="live-badge">● Live Rates</span>
+          </div>
+
+          <div class="converter-wrapper">
+            <!-- From Currency -->
+            <div class="currency-input-group">
+              <div class="label-row">
+                <label>You Pay</label>
+              </div>
+              <div class="input-row">
+                <input type="number" id="amount" value="1" min="0" />
+                <div class="select-wrapper">
+                  <img src="" alt="flag" class="flag-icon" id="from-flag" />
+                  <select id="from-currency">
+                    <!-- Populated via JS -->
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Swap Button -->
+            <div class="swap-container">
+              <button id="swap-btn" class="btn-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+              </button>
+            </div>
+
+            <!-- To Currency -->
+            <div class="currency-input-group">
+              <div class="label-row">
+                <label>You Receive</label>
+              </div>
+              <div class="input-row">
+                <input type="text" id="result-amount" value="..." readonly />
+                <div class="select-wrapper">
+                  <img src="" alt="flag" class="flag-icon" id="to-flag" />
+                  <select id="to-currency">
+                    <!-- Populated via JS -->
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="rate-info">
+              <span>1 <span id="lbl-from">...</span> = <span id="exchange-rate">...</span> <span id="lbl-to">...</span></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right: Live Rate Slider -->
+        <section class="glass-card slider-section">
+          <div class="card-header">
+            <h3>Live Market</h3>
+          </div>
+          <div class="slider-container">
+            <div class="slider-track" id="slider-track">
+              <!-- Populated via JS -->
+              <div class="slider-item">Loading rates...</div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Bottom: Chart -->
+      <section id="markets" class="bottom-section">
+        <div class="glass-card chart-card">
+          <div class="card-header">
+            <h3>Market Analytics</h3>
+            <div class="time-filters">
+              <button class="filter-btn" data-days="30">1M</button>
+              <button class="filter-btn active" data-days="90">3M</button>
+              <button class="filter-btn" data-days="365">1Y</button>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="marketChart"></canvas>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="main.js"></script>
+  </body>
 </html>

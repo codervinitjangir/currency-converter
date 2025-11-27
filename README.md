@@ -1,42 +1,34 @@
-# 🌍 MyCurrencyConverter  
-A modern and user-friendly currency conversion web app designed to convert between global currencies with a sleek UI.  
-Built with a scalable architecture — future support includes API-based live rates, IndexedDB caching, and offline-first PWA.
+# 🌍 FluxCurrency  
+A modern real-time currency exchange dashboard with a premium glass UI, live API conversion, historical charts, flags, auto-update input, and theme support.
 
----
+## ✨ Current Features
+- ⚡ Live currency conversion using Frankfurter API  
+- 📊 Historical chart view (30D / 90D / 1Y)  
+- ♻ Auto input update with debounce  
+- 🌗 Dark/Light mode toggle  
+- 🇺🇸 Auto country flags + currency names  
+- 🧪 Clean, modular JavaScript architecture  
+- 🎨 Premium glassmorphic UI (Inter + Outfit fonts)  
+- 📱 Fully responsive for mobile + desktop  
 
-## Features (Current)
-- ✨ Clean and responsive UI using HTML + CSS  
-- 🎨 Modern typography & theme variables (`Roboto`, `Montserrat`)  
-- 📱 Mobile-friendly design  
-- 📦 Structured folder setup for future development  
-- 🎯 UI-only phase (logic will be added later)
-
----
-
-## 🔮 Roadmap (Upcoming Features)
-
-| Feature | Status | Planned Tech |
-|---------|--------|--------------|
-| Live currency API (Frankfurter) | ⏳ Pending | `fetch()` |
-| Multi-currency conversion display | ⏳ Pending | Dynamic table UI |
-| IndexedDB caching | ⏳ Pending | Client-side DB |
-| TTL-based cache validation | ⏳ Pending | Metadata timestamps |
-| Offline Support (PWA) | ⏳ Pending | Service Worker |
-| Undo / Import / Export | ⏳ Pending | Snapshots + JSON |
-
----
+## 🔮 Roadmap (Next Milestones)
+| Feature | Status | Tech |
+|---------|--------|------|
+| IndexedDB caching | 🔜 Planned | Client-Side DB |
+| Offline PWA Support | 🔜 Planned | Service Worker |
+| Auto-refresh polling | 🔜 Planned | background worker |
+| Export / Import history | 🔜 Planned | JSON |
+| Multi-pair comparison mode | 🔜 Planned | Multiple datasets |
 
 ## 🛠 Tech Stack
-
-| Area | Technology |
-|------|------------|
-| **Frontend** | HTML5, CSS3, Vanilla JS |
-| **Fonts** | Google Fonts (Roboto, Montserrat) |
-| **Storage (future)** | IndexedDB, localStorage |
-| **API Provider (future)** | Frankfurter / ECB |
-| **PWA (future)** | Service Worker, Manifest |
-
----
+| Category | Tools |
+|----------|-------|
+| Frontend | HTML, CSS, Vanilla JS |
+| API | Frankfurter.app |
+| Fonts | Google Fonts (Inter, Outfit) |
+| Visualization | Chart.js |
+| Flags | flagcdn |
+| Future Storage | IndexedDB + localStorage |
 
 ## 📂 Project Structure
 
