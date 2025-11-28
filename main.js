@@ -107,10 +107,92 @@ function handleCurrencyChange() {
 // API & Logic
 // ==========================================
 
+const DB_NAME = 'currencyDB';
+const DB_VERSION = 1;
+const STORE_NAME = 'rates';
+const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
+
+const dbPromise = new Promise((resolve, reject) => {
+  const request = indexedDB.open(DB_NAME, DB_VERSION);
+  request.onerror = (event) => {
+    console.warn('IndexedDB error:', event.target.error);
+    resolve(null); // Fallback to no cache if DB fails
+  };
+  request.onsuccess = (event) => resolve(event.target.result);
+  request.onupgradeneeded = (event) => {
+    const db = event.target.result;
+    if (!db.objectStoreNames.contains(STORE_NAME)) {
+      db.createObjectStore(STORE_NAME, { keyPath: 'url' });
+    }
+  };
+});
+
+// IndexedDB Helpers
+const getDb = async () => {
+  try {
+    return await dbPromise;
+  } catch (e) {
+    console.warn('DB failed to open', e);
+    return null;
+  }
+};
+
+const getFromCache = async (url) => {
+  const db = await getDb();
+  if (!db) return null;
+
+  return new Promise((resolve) => {
+    const transaction = db.transaction([STORE_NAME], 'readonly');
+    const request = transaction.objectStore(STORE_NAME).get(url);
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => resolve(null);
+  });
+};
+
+const saveToCache = async (url, data) => {
+  const db = await getDb();
+  if (!db) return;
+
+  try {
+    const transaction = db.transaction([STORE_NAME], 'readwrite');
+    transaction.objectStore(STORE_NAME).put({ url, data, timestamp: Date.now() });
+  } catch (e) {
+    console.warn('Failed to save to cache', e);
+  }
+};
+
+// Main Fetch Function
+async function fetchWithCache(url) {
+  const cached = await getFromCache(url);
+  const isFresh = cached && (Date.now() - cached.timestamp < CACHE_TTL);
+
+  // 1. Return fresh cache immediately
+  if (isFresh) {
+    console.log('Serving from cache (fresh):', url);
+    return cached.data;
+  }
+
+  // 2. Fetch fresh data
+  console.log('Fetching fresh:', url);
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    await saveToCache(url, data);
+    return data;
+  } catch (err) {
+    // 3. Offline Fallback: Return stale cache if available
+    console.warn('Network failed, checking stale cache...', err);
+    if (cached) {
+      console.log('Serving from cache (stale/offline):', url);
+      return cached.data;
+    }
+    throw err; // No cache + No network = Error
+  }
+}
+
 async function loadCurrencies() {
   try {
-    const res = await fetch(`${API_URL}/currencies`);
-    const data = await res.json();
+    const data = await fetchWithCache(`${API_URL}/currencies`);
     state.currencies = data;
     
     // Populate Dropdowns
@@ -144,16 +226,14 @@ async function updateExchangeRate() {
   }
 
   try {
-    const res = await fetch(`${API_URL}/latest?amount=${state.amount}&from=${state.from}&to=${state.to}`);
-    const data = await res.json();
+    const data = await fetchWithCache(`${API_URL}/latest?amount=${state.amount}&from=${state.from}&to=${state.to}`);
     const rate = data.rates[state.to];
     
     // Update Result
     els.result.value = rate.toLocaleString(undefined, { maximumFractionDigits: 2 });
     
     // Update Rate Label (1 Unit)
-    const unitRes = await fetch(`${API_URL}/latest?from=${state.from}&to=${state.to}`);
-    const unitData = await unitRes.json();
+    const unitData = await fetchWithCache(`${API_URL}/latest?from=${state.from}&to=${state.to}`);
     els.rate.textContent = unitData.rates[state.to].toFixed(4);
     
     els.lblFrom.textContent = state.from;
@@ -168,8 +248,7 @@ async function loadPopularRates() {
   const targets = popular.filter(c => c !== state.from).join(',');
   
   try {
-    const res = await fetch(`${API_URL}/latest?from=${state.from}&to=${targets}`);
-    const data = await res.json();
+    const data = await fetchWithCache(`${API_URL}/latest?from=${state.from}&to=${targets}`);
     renderSlider(data.rates);
   } catch (err) {
     console.error('Failed to load popular rates', err);
@@ -185,8 +264,7 @@ async function loadHistory() {
   const startStr = start.toISOString().split('T')[0];
 
   try {
-    const res = await fetch(`${API_URL}/${startStr}..${end}?from=${state.from}&to=${state.to}`);
-    const data = await res.json();
+    const data = await fetchWithCache(`${API_URL}/${startStr}..${end}?from=${state.from}&to=${state.to}`);
     
     const labels = Object.keys(data.rates);
     const values = labels.map(date => data.rates[date][state.to]);
