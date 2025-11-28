@@ -46,10 +46,13 @@ document.addEventListener('DOMContentLoaded', () => {
 function setupEventListeners() {
   // Amount Input (Debounced)
   els.amount.addEventListener('input', (e) => {
+    if (e.target.value.length > 20) {
+      e.target.value = e.target.value.slice(0, 20);
+    }
     const val = parseFloat(e.target.value);
     state.amount = isNaN(val) ? 0 : val;
     clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(updateExchangeRate, 500);
+    debounceTimer = setTimeout(updateExchangeRate,400);
   });
 
   // Currency Selects
@@ -135,7 +138,7 @@ async function updateExchangeRate() {
   }
 
   if (state.from === state.to) {
-    els.result.value = state.amount.toFixed(2);
+    els.result.value = state.amount;
     els.rate.textContent = '1.0000';
     return;
   }
@@ -146,7 +149,7 @@ async function updateExchangeRate() {
     const rate = data.rates[state.to];
     
     // Update Result
-    els.result.value = rate.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    els.result.value = rate.toLocaleString(undefined, { maximumFractionDigits: 2 });
     
     // Update Rate Label (1 Unit)
     const unitRes = await fetch(`${API_URL}/latest?from=${state.from}&to=${state.to}`);
