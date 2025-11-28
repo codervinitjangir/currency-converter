@@ -1,4 +1,5 @@
-# 🌍 FluxCurrency  
+## 🌍 FluxCurrency  
+# https://fluxcurrency.pages.dev/
 A modern real-time currency exchange dashboard with a premium glass UI, live API conversion, historical charts, flags, auto-update input, and theme support.
 
 ## ✨ Current Features
