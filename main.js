@@ -226,15 +226,16 @@ async function updateExchangeRate() {
   }
 
   try {
-    const data = await fetchWithCache(`${API_URL}/latest?amount=${state.amount}&from=${state.from}&to=${state.to}`);
+    // Fetch rate for 1 unit
+    const data = await fetchWithCache(`${API_URL}/latest?from=${state.from}&to=${state.to}`);
     const rate = data.rates[state.to];
     
-    // Update Result
-    els.result.value = rate.toLocaleString(undefined, { maximumFractionDigits: 2 });
+    // Calculate Result Locally
+    const result = rate * state.amount;
+    els.result.value = result.toLocaleString(undefined, { maximumFractionDigits: 2 });
     
-    // Update Rate Label (1 Unit)
-    const unitData = await fetchWithCache(`${API_URL}/latest?from=${state.from}&to=${state.to}`);
-    els.rate.textContent = unitData.rates[state.to].toFixed(4);
+    // Update Rate Label
+    els.rate.textContent = rate.toFixed(4);
     
     els.lblFrom.textContent = state.from;
     els.lblTo.textContent = state.to;
