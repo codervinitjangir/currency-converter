@@ -94,22 +94,23 @@ Traditional currency converters often have:
 │ .gitignore
 │ LICENSE
 
-## 🔧 Setup & Run
+🔧 Setup & Run
+1️⃣ Clone the Repository
+Bash
 
-### 1️⃣ Clone the Repository
-```bash
 git clone [https://github.com/codervinitjangir/currency-converter.git](https://github.com/codervinitjangir/currency-converter.git)
 cd currency-converter
+2️⃣ Start the App
 Just open: index.html No backend or local server required.
 
-## 🤝 Contributing
+🤝 Contributing
 Contributions are welcome! If you want to improve UI, performance, caching, charts, or add new features — feel free to fork and submit a PR.
 
-## 📜 License
+📜 License
 Licensed under the MIT License — you are free to use, modify, and distribute.
 
-## 👤 Author
+👤 Author
 Vinit Jangir Frontend Developer Associate GitHub: https://github.com/codervinitjangir
 
-## ⭐ Support
+⭐ Support
 If this project helped you, please star the repository — it motivates future updates!
