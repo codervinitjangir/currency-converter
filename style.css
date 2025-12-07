@@ -787,65 +787,13 @@ select:focus {
 }
 
 /* ================================
-   12. Network Status Toast
+   12. Network Status Badge (Minimalist)
 ================================ */
-.status-toast {
-  position: fixed;
-  bottom: 2rem;
-  top: auto;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 0.8rem 1.5rem;
-  border-radius: 50px;
-  background: rgba(15, 23, 42, 0.85); /* Dark neutral base */
-  border: 1px solid var(--glass-border);
-  color: #fff;
-  font-weight: 500;
-  z-index: 2000;
-  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  font-size: 0.95rem;
-  letter-spacing: 0.3px;
-}
+/* Note: Base .live-badge styles are defined in .card-header section */
 
-.status-toast::before {
-  content: '';
-  display: block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  box-shadow: 0 0 10px currentColor; /* Glow effect */
-}
-
-/* Offline: Visual refinement */
-.status-toast.offline {
-  border-bottom: 2px solid var(--danger);
-  color: #fca5a5; /* Softer red text */
-}
-
-.status-toast.offline::before {
-  background-color: var(--danger);
-}
-
-/* Online: Visual refinement */
-.status-toast.online {
-  border-bottom: 2px solid var(--success);
-  color: #86efac; /* Softer green text */
-}
-
-.status-toast.online::before {
-  background-color: var(--success);
-}
-
-.status-toast.hidden {
-  bottom: -100px;
-  top: auto;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateX(-50%) translateY(20px);
+.live-badge.offline {
+  color: var(--danger);
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+  transition: all 0.3s ease;
 }

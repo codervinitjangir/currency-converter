@@ -5,7 +5,7 @@
 const API_URL = 'https://api.frankfurter.app';
 let chartInstance = null;
 let debounceTimer = null;
-let networkTimeout = null;
+
 
 // State
 const state = {
@@ -215,24 +215,15 @@ function closeModal() {
 // ==========================================
 
 function updateNetworkStatus() {
-  const toast = document.getElementById('network-status');
-  
-  clearTimeout(networkTimeout);
+  const badge = document.querySelector('.live-badge');
+  if (!badge) return;
   
   if (navigator.onLine) {
-    // Back Online
-    toast.textContent = "Back Online!";
-    toast.className = "status-toast online"; // Remove hidden, set online
-    
-    // Hide after 3 seconds
-    networkTimeout = setTimeout(() => {
-      toast.classList.add('hidden');
-    }, 3000);
+    badge.innerHTML = '● Live Rates';
+    badge.className = 'live-badge'; // Reset to default (Green)
   } else {
-    // Modify text content to remove icon dot if strict text required, 
-    // but CSS pseudo-element handles the visual dot.
-    toast.textContent = "You are Offline";
-    toast.className = "status-toast offline"; // Remove hidden, set offline
+    badge.innerHTML = '⚠ Offline Mode';
+    badge.className = 'live-badge offline'; // Set to offline (Red)
   }
 }
 
