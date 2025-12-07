@@ -13,11 +13,16 @@
       rel="stylesheet"
     />
     <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
+    <!-- Network Status Toast -->
+    <div id="network-status" class="status-toast hidden">
+      You are currently offline
+    </div>
+
     <div class="background-blobs">
       <div class="blob blob-1"></div>
       <div class="blob blob-2"></div>
@@ -33,7 +38,7 @@
           <li><a href="#markets">Markets</a></li>
         </ul>
 
-        <button id="theme-toggle" class="btn-icon small">
+        <button id="theme-toggle" class="btn-icon small" aria-label="Toggle Theme">
           <!-- Sun Icon (Default for Dark) -->
           <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
           <!-- Moon Icon (Hidden by default) -->
@@ -56,13 +61,13 @@
             <!-- From Currency -->
             <div class="currency-input-group">
               <div class="label-row">
-                <label>Amount</label>
+                <label for="amount">Amount</label>
               </div>
               <div class="input-row">
                 <input type="number" id="amount" placeholder="0" min="0" />
                 <div class="select-wrapper">
                   <img src="" alt="flag" class="flag-icon" id="from-flag" />
-                  <select id="from-currency">
+                  <select id="from-currency" aria-label="Select Source Currency">
                     <!-- Populated via JS -->
                   </select>
                 </div>
@@ -71,7 +76,7 @@
 
             <!-- Swap Button -->
             <div class="swap-container">
-              <button id="swap-btn" class="btn-icon">
+              <button id="swap-btn" class="btn-icon" aria-label="Swap Currencies">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
               </button>
             </div>
@@ -79,13 +84,13 @@
             <!-- To Currency -->
             <div class="currency-input-group">
               <div class="label-row">
-                <label>You Receive</label>
+                <label for="result-amount">You Receive</label>
               </div>
               <div class="input-row">
                 <input type="text" id="result-amount" value="..." readonly />
                 <div class="select-wrapper">
                   <img src="" alt="flag" class="flag-icon" id="to-flag" />
-                  <select id="to-currency">
+                  <select id="to-currency" aria-label="Select Target Currency">
                     <!-- Populated via JS -->
                   </select>
                 </div>
@@ -128,8 +133,65 @@
           </div>
         </div>
       </section>
+      <!-- Footer -->
+      <footer class="footer glass-card">
+        <div class="footer-content">
+          <!-- Column 1: Brand & Links -->
+          <div class="footer-col">
+            <h4 class="footer-logo">Flux<span class="highlight">Currency</span>.</h4>
+            <p class="copyright">© 2025 FluxCurrency.<br>All rights reserved.</p>
+            <div class="footer-links">
+              <a href="#" onclick="openModal('privacy'); return false;">Privacy Policy</a>
+              <a href="#" onclick="openModal('support'); return false;">Support</a>
+            </div>
+          </div>
+
+          <!-- Column 2: Socials -->
+          <div class="footer-col center-col">
+            <h5>Connect</h5>
+            <div class="social-links">
+              <a href="https://www.linkedin.com/in/vinit-jangir-43a753382?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" class="social-btn" aria-label="LinkedIn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+              </a>
+              <a href="https://www.instagram.com/100nug?igsh=eWR4ejVxeXRlY3B1" target="_blank" class="social-btn" aria-label="Instagram">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+              </a>
+              <a href="mailto:djangir0090@gmail.com" class="social-btn" aria-label="Email">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Column 3: Backup -->
+          <div class="footer-col right-col">
+            <h5>Data Backup</h5>
+            <div class="backup-actions">
+              <button id="btn-export" class="btn-outline small-text" onclick="exportData()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Export JSON
+              </button>
+              <button id="btn-import" class="btn-outline small-text" onclick="document.getElementById('file-import').click()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                Import JSON
+              </button>
+              <input type="file" id="file-import" accept=".json" style="display: none;" onchange="importData(this.files[0])">
+            </div>
+          </div>
+        </div>
+      </footer>
     </main>
 
+    <!-- Info Modal -->
+    <div id="info-modal" class="modal-overlay hidden" onclick="if(event.target === this) closeModal()">
+      <div class="glass-card modal-content">
+        <h3 id="modal-title">Title</h3>
+        <p id="modal-body">Content goes here...</p>
+        <button class="btn-primary" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+
+    <!-- Chart.js (Deferred) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="main.js"></script>
   </body>
 </html>

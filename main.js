@@ -5,6 +5,7 @@
 const API_URL = 'https://api.frankfurter.app';
 let chartInstance = null;
 let debounceTimer = null;
+let networkTimeout = null;
 
 // State
 const state = {
@@ -37,11 +38,21 @@ const els = {
 // Initialization
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-  initTheme();
+  setTheme(localStorage.getItem('theme') || 'dark');
   initChart();
   loadCurrencies();
   setupEventListeners();
+
+  registerServiceWorker();
 });
+
+function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js')
+      // .then(() => console.log('Service Worker Registered'))
+      .catch(err => console.error('SW Registration Failed:', err));
+  }
+}
 
 function setupEventListeners() {
   // Amount Input (Debounced)
@@ -93,15 +104,142 @@ function setupEventListeners() {
   });
 
   // Theme Toggle
-  els.themeToggle.addEventListener('click', toggleTheme);
+  els.themeToggle.addEventListener('click', () => {
+    const isDark = document.body.getAttribute('data-theme') === 'dark';
+    setTheme(isDark ? 'light' : 'dark');
+  });
 }
 
 function handleCurrencyChange() {
   updateFlags();
   updateExchangeRate();
-  loadPopularRates();
   loadHistory();
 }
+
+// ==========================================
+// Backup & Restore System
+// ==========================================
+
+async function exportData() {
+  const db = await getDb();
+  if (!db) {
+    alert("Database not ready!");
+    return;
+  }
+
+  const transaction = db.transaction([STORE_NAME], 'readonly');
+  const store = transaction.objectStore(STORE_NAME);
+  const request = store.getAll();
+
+  request.onsuccess = () => {
+    const data = request.result;
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `flux-backup-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  request.onerror = () => alert("Failed to export data.");
+}
+
+async function importData(file) {
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!Array.isArray(data)) throw new Error("Invalid Format");
+
+      const db = await getDb();
+      if (!db) return;
+
+      const tx = db.transaction([STORE_NAME], 'readwrite');
+      const store = tx.objectStore(STORE_NAME);
+      
+      data.forEach(item => store.put(item));
+
+      tx.oncomplete = () => {
+        alert("Data restored successfully! Refreshing...");
+        window.location.reload();
+      };
+      
+      tx.onerror = () => alert("Failed to save data to DB.");
+
+    } catch (err) {
+      console.error(err);
+      alert("Invalid backup file.");
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ==========================================
+// Info Modal System
+// ==========================================
+
+const modalContent = {
+  privacy: {
+    title: "Privacy Policy",
+    body: "Your privacy is our priority. FluxCurrency operates entirely on your device (Client-Side). We do not store, collect, or transmit any of your personal financial data or usage history to external servers. All data remains strictly local in your browser's secure database."
+  },
+  support: {
+    title: "Support",
+    body: "Need assistance? We're here to help! For inquiries, bug reports, or feedback, please reach out to us at <br><br><strong>djangir0090@gmail.com</strong><br><br>We aim to respond to all queries within 24-48 hours."
+  }
+};
+
+function openModal(type) {
+  const content = modalContent[type];
+  if (!content) return;
+  
+  document.getElementById('modal-title').textContent = content.title;
+  document.getElementById('modal-body').innerHTML = content.body; // Using innerHTML to support <br>
+  document.getElementById('info-modal').classList.remove('hidden');
+}
+
+function closeModal() {
+  document.getElementById('info-modal').classList.add('hidden');
+  document.getElementById('info-modal').classList.add('hidden');
+}
+
+// ==========================================
+// Network Status Logic
+// ==========================================
+
+function updateNetworkStatus() {
+  const toast = document.getElementById('network-status');
+  
+  clearTimeout(networkTimeout);
+  
+  if (navigator.onLine) {
+    // Back Online
+    toast.textContent = "Back Online!";
+    toast.className = "status-toast online"; // Remove hidden, set online
+    
+    // Hide after 3 seconds
+    networkTimeout = setTimeout(() => {
+      toast.classList.add('hidden');
+    }, 3000);
+  } else {
+    // Modify text content to remove icon dot if strict text required, 
+    // but CSS pseudo-element handles the visual dot.
+    toast.textContent = "You are Offline";
+    toast.className = "status-toast offline"; // Remove hidden, set offline
+  }
+}
+
+window.addEventListener('online', updateNetworkStatus);
+window.addEventListener('offline', updateNetworkStatus);
+// Initial check (optional, usually start hidden)
+if (!navigator.onLine) updateNetworkStatus();
 
 // ==========================================
 // API & Logic
@@ -168,12 +306,12 @@ async function fetchWithCache(url) {
 
   // 1. Return fresh cache immediately
   if (isFresh) {
-    console.log('Serving from cache (fresh):', url);
+    // console.log('Serving from cache (fresh):', url);
     return cached.data;
   }
 
   // 2. Fetch fresh data
-  console.log('Fetching fresh:', url);
+  // console.log('Fetching fresh:', url);
   try {
     const res = await fetch(url);
     const data = await res.json();
@@ -183,21 +321,32 @@ async function fetchWithCache(url) {
     // 3. Offline Fallback: Return stale cache if available
     console.warn('Network failed, checking stale cache...', err);
     if (cached) {
-      console.log('Serving from cache (stale/offline):', url);
+      // console.log('Serving from cache (stale/offline):', url);
       return cached.data;
     }
     throw err; // No cache + No network = Error
   }
 }
 
-async function loadCurrencies() {
+// 1. Generate Currency List Locally (No API Call)
+function loadCurrencies() {
   try {
-    const data = await fetchWithCache(`${API_URL}/currencies`);
-    state.currencies = data;
+    const currencyNames = new Intl.DisplayNames(['en'], { type: 'currency' });
+    const codes = Object.keys(currencyToCountry).sort();
     
+    // Store names for Slider
+    state.currencies = {};
+    codes.forEach(code => {
+      try {
+        state.currencies[code] = currencyNames.of(code);
+      } catch {
+        state.currencies[code] = code;
+      }
+    });
+
     // Populate Dropdowns
-    const options = Object.entries(data).map(([code, name]) => 
-      `<option value="${code}">${code} - ${name}</option>`
+    const options = codes.map(code => 
+      `<option value="${code}">${code} - ${state.currencies[code]}</option>`
     ).join('');
     
     els.from.innerHTML = options;
@@ -214,10 +363,8 @@ async function loadCurrencies() {
 }
 
 async function updateExchangeRate() {
-  if (state.amount === 0) {
-    els.result.value = '0.00';
-    return;
-  }
+  els.lblFrom.textContent = state.from;
+  els.lblTo.textContent = state.to;
 
   if (state.from === state.to) {
     els.result.value = state.amount;
@@ -226,35 +373,29 @@ async function updateExchangeRate() {
   }
 
   try {
-    // Fetch rate for 1 unit
-    const data = await fetchWithCache(`${API_URL}/latest?from=${state.from}&to=${state.to}`);
+    // 1. Fetch ALL rates for the base currency (Optimized: Single Request)
+    const data = await fetchWithCache(`${API_URL}/latest?from=${state.from}`);
+    
+    // 2. Update Calculator
     const rate = data.rates[state.to];
-    
-    // Calculate Result Locally
-    const result = rate * state.amount;
-    els.result.value = result.toLocaleString(undefined, { maximumFractionDigits: 2 });
-    
-    // Update Rate Label
-    els.rate.textContent = rate.toFixed(4);
-    
-    els.lblFrom.textContent = state.from;
-    els.lblTo.textContent = state.to;
+    if (rate) {
+      els.rate.textContent = rate.toFixed(4);
+      if (state.amount === 0) {
+        els.result.value = '0.00';
+      } else {
+        const result = rate * state.amount;
+        els.result.value = result.toLocaleString(undefined, { maximumFractionDigits: 2 });
+      }
+    }
+
+    // 3. Update Slider (with all rates)
+    renderSlider(data.rates);
+
   } catch (err) {
-    console.error('Failed to fetch rate', err);
+    console.error('Failed to fetch rates', err);
   }
 }
 
-async function loadPopularRates() {
-  const popular = ['EUR', 'GBP', 'JPY', 'AUD', 'CAD', 'CHF', 'CNY', 'INR', 'SGD', 'NZD'];
-  const targets = popular.filter(c => c !== state.from).join(',');
-  
-  try {
-    const data = await fetchWithCache(`${API_URL}/latest?from=${state.from}&to=${targets}`);
-    renderSlider(data.rates);
-  } catch (err) {
-    console.error('Failed to load popular rates', err);
-  }
-}
 
 async function loadHistory() {
   if (state.from === state.to) return;
@@ -363,46 +504,29 @@ function updateChart(labels, data) {
   chartInstance.update();
 }
 
-function updateChartTheme(theme) {
-  if (!chartInstance) return;
-  const isLight = theme === 'light';
-  const color = isLight ? '#64748b' : '#94a3b8';
-  const grid = isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)';
-  
-  chartInstance.options.scales.y.ticks.color = color;
-  chartInstance.options.scales.y.grid.color = grid;
-  chartInstance.update();
-}
+
+
 
 // ==========================================
 // Theme Logic
 // ==========================================
 
-function initTheme() {
-  const theme = localStorage.getItem('theme') || 'dark';
+function setTheme(theme) {
   document.body.setAttribute('data-theme', theme);
-  updateThemeIcons(theme);
-  setTimeout(() => updateChartTheme(theme), 100);
-}
+  localStorage.setItem('theme', theme);
 
-function toggleTheme() {
-  const current = document.body.getAttribute('data-theme');
-  const next = current === 'light' ? 'dark' : 'light';
-  document.body.setAttribute('data-theme', next);
-  localStorage.setItem('theme', next);
-  updateThemeIcons(next);
-  updateChartTheme(next);
-}
+  // Update Icons
+  const isLight = theme === 'light';
+  els.themeToggle.querySelector('.sun-icon').style.display = isLight ? 'none' : 'block';
+  els.themeToggle.querySelector('.moon-icon').style.display = isLight ? 'block' : 'none';
 
-function updateThemeIcons(theme) {
-  const sun = els.themeToggle.querySelector('.sun-icon');
-  const moon = els.themeToggle.querySelector('.moon-icon');
-  if (theme === 'light') {
-    sun.style.display = 'none';
-    moon.style.display = 'block';
-  } else {
-    sun.style.display = 'block';
-    moon.style.display = 'none';
+  // Update Chart Theme
+  if (chartInstance) {
+    const color = isLight ? '#64748b' : '#94a3b8';
+    const grid = isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)';
+    chartInstance.options.scales.y.ticks.color = color;
+    chartInstance.options.scales.y.grid.color = grid;
+    chartInstance.update();
   }
 }
 
