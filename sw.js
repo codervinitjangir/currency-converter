@@ -1,17 +1,17 @@
 const CACHE_NAME = "flux-currency-v4";
 const ASSETS = [
   "./",
-  "./index.html",
-  "./style.css",
-  "./js/app.js",
-  "./js/db.js",
+  "index.html",
+  "style.css",
+  "js/app.js",
+  "js/db.js",
 
-  "./js/api.js",
-  "./js/ui.js",
-  "./manifest.json",
-  "./assets/icon.svg",
-  "./assets/icon-192.png",
-  "./assets/icon-512.png",
+  "js/api.js",
+  "js/ui.js",
+  "manifest.json",
+  "assets/icon.svg",
+  "assets/icon-192.png",
+  "assets/icon-512.png",
   "https://cdn.jsdelivr.net/npm/chart.js"
 ];
 
