@@ -1,0 +1,18 @@
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build
+dist/
+build/
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Sensitive / Large Files
+FluxCurrency - Google Play package/
+*.keystore
+*.aab
+*.apk

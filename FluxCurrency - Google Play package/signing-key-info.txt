@@ -1,0 +1,10 @@
+Keep this file and signing.keystore in a safe place. You'll need these files if you want to upload future versions of your PWA to the Google Play Store.
+
+Key store file: signing.keystore
+Key store password: uAGP8jFs2NbU
+Key alias: my-key-alias
+Key password: uAGP8jFs2NbU
+Signer's full name: FluxCurrency Admin
+Signer's organization: FluxCurrency
+Signer's organizational unit: Engineering
+Signer's country code: US

@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.fluxcurrency.app",
+        "sha256_cert_fingerprints": ["B1:46:B5:3A:1E:64:6E:A8:E3:CE:3F:DC:09:44:BF:D8:1B:6B:24:75:EB:28:5F:18:9B:71:6A:F5:0D:A1:26:A8"]
+      }
+    }]
