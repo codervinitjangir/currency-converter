@@ -32,7 +32,7 @@
   "screenshots": [
     {
       "src": "assets/screenshot-mobile.png",
-      "sizes": "1080x1920",
+      "sizes": "358x810",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Mobile Dashboard"
