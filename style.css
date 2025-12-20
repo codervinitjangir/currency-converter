@@ -595,6 +595,20 @@ select:focus {
     width: 100%;
     justify-content: space-between;
   }
+}
+
+/* ================================
+   10. Footer (Compact)
+================================ */
+.footer {
+  margin-top: 1.5rem;
+  padding: 1.5rem 2rem;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg); /* Fixed: Adaptive background */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 16px;
+}
   
 .modal-overlay {
   position: fixed;
@@ -693,7 +707,13 @@ select:focus {
 }
 
 .right-col {
-  align-items: flex-end;
+  justify-self: end;
+  align-items: center;
+  text-align: center;
+}
+
+.right-col h5 {
+  width: auto;
 }
 
 .social-links {
