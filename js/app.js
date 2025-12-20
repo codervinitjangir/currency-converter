@@ -20,8 +20,6 @@ let debounceTimer = null;
 const els = UI.getElements();
 
 // Global Exports for HTML onclick handlers
-window.exportData = DB.exportData;
-window.importData = DB.importData;
 window.openModal = UI.openModal;
 window.closeModal = UI.closeModal;
 

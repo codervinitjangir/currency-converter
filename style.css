@@ -596,24 +596,6 @@ select:focus {
     justify-content: space-between;
   }
   
-  .currency-input-group {
-    padding: 1rem;
-  }
-}
-
-/* ================================
-   10. Footer
-================================ */
-.footer {
-  margin-top: auto;
-  padding: 1.5rem 2rem;
-  border-radius: 24px;
-  background: var(--glass-bg);
-}
-
-/* ================================
-   11. Info Modal
-================================ */
 .modal-overlay {
   position: fixed;
   top: 0; left: 0;
@@ -666,7 +648,7 @@ select:focus {
 .footer-content {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 2rem;
+  gap: 1.5rem; /* Reduced from 2rem */
   align-items: start;
 }
 

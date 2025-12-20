@@ -11,6 +11,16 @@ build/
 .DS_Store
 Thumbs.db
 
+# Editors
+.vscode/
+.idea/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
 # Sensitive / Large Files
 FluxCurrency - Google Play package/
 *.keystore
