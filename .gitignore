@@ -26,3 +26,4 @@ FluxCurrency - Google Play package/
 *.keystore
 *.aab
 *.apk
+!assets/*.apk
