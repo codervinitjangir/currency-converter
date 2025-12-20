@@ -1,4 +1,4 @@
-const CACHE_NAME = "flux-currency-v3";
+const CACHE_NAME = "flux-currency-v4";
 const ASSETS = [
   "./",
   "./index.html",
@@ -9,7 +9,9 @@ const ASSETS = [
   "./js/api.js",
   "./js/ui.js",
   "./manifest.json",
-  "./icon.svg",
+  "./assets/icon.svg",
+  "./assets/icon-192.png",
+  "./assets/icon-512.png",
   "https://cdn.jsdelivr.net/npm/chart.js"
 ];
 
