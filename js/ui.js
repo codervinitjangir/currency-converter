@@ -64,6 +64,12 @@ export function renderSlider(rates, currencyNames) {
 // Notifications & Loading
 // ==========================================
 
+export function vibrate(ms = 10) {
+  if (navigator.vibrate) {
+    navigator.vibrate(ms);
+  }
+}
+
 export function showLoading(containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;

@@ -35,7 +35,15 @@ document.addEventListener('DOMContentLoaded', () => {
   registerServiceWorker();
   
   // Network Listeners
-  window.addEventListener('online', UI.updateNetworkStatus);
+  window.addEventListener('online', () => {
+    UI.updateNetworkStatus();
+    UI.showToast('Refreshing rates...', 'info');
+    setTimeout(() => {
+      updateExchangeRate();
+      loadHistory();
+    }, 1000); // Small delay to ensure connection is stable
+  });
+  
   window.addEventListener('offline', UI.updateNetworkStatus);
   if (!navigator.onLine) UI.updateNetworkStatus();
 });
@@ -98,6 +106,7 @@ function setupEventListeners() {
 
   // Swap
   els.swap.addEventListener('click', () => {
+    UI.vibrate(15);
     [state.from, state.to] = [state.to, state.from];
     els.from.value = state.from;
     els.to.value = state.to;
@@ -113,6 +122,7 @@ function setupEventListeners() {
   // Filters
   els.filters.forEach(btn => {
     btn.addEventListener('click', () => {
+      UI.vibrate(5);
       els.filters.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       state.historyDays = parseInt(btn.dataset.days);
@@ -122,6 +132,7 @@ function setupEventListeners() {
 
   // Theme
   els.themeToggle.addEventListener('click', () => {
+    UI.vibrate(5);
     const isDark = document.body.getAttribute('data-theme') === 'dark';
     UI.setTheme(isDark ? 'light' : 'dark');
   });

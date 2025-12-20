@@ -901,3 +901,119 @@ select:focus {
 @keyframes fadeOut {
   to { opacity: 0; transform: translateY(-10px); }
 }
+
+/* ================================
+   13. Mobile UX Polish (Native Feel)
+================================ */
+
+/* Better Touch Targets */
+button, 
+select, 
+input, 
+.btn-icon, 
+.filter-btn {
+  touch-action: manipulation; /* Removes tap delay */
+}
+
+@media (max-width: 600px) {
+  /* 1. Layout Spacing */
+  .dashboard-container {
+    padding: 1rem;
+    padding-bottom: 80px; /* Space for thumb reach/scrolling */
+    gap: 1.5rem;
+  }
+
+  /* 2. Header / Nav */
+  .glass-nav {
+    padding: 1rem 1.5rem;
+  }
+  
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  /* 3. Converter Card improvements */
+  .glass-card {
+    padding: 1.5rem;
+  }
+
+  .currency-input-group {
+    padding: 1.5rem; /* Larger tap area */
+  }
+
+  .label-row {
+    margin-bottom: 0.5rem;
+  }
+
+  /* 4. Inputs & Selects */
+  /* Make input huge and readable */
+  input[type="number"], 
+  input[type="text"] {
+    font-size: 2.2rem; 
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  .select-wrapper {
+    width: 100%;
+    height: 54px; /* Big touch target */
+    font-size: 1.1rem;
+    justify-content: space-between;
+  }
+
+  .flag-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  /* 5. Swap Button - The Float Effect */
+  .swap-container {
+    margin: -1.8rem 0; /* Tighter overlap */
+  }
+
+  .btn-icon#swap-btn {
+    width: 60px;
+    height: 60px; /* Thumb friendly */
+    background: var(--glass-bg);
+    border: 1px solid var(--primary);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    backdrop-filter: blur(20px);
+  }
+  
+  .btn-icon#swap-btn svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* 6. Footer Stacking */
+  .footer-content {
+    gap: 2rem;
+  }
+  
+  .footer-col { 
+    width: 100%; 
+    align-items: center;
+    text-align: center;
+  }
+  
+  .backup-actions {
+    width: 100%;
+  }
+  
+  .btn-outline {
+    justify-content: center;
+    width: 100%;
+    height: 48px;
+  }
+
+  /* 7. Hide non-essential nav links to save space */
+  .nav-links {
+    display: none; 
+  }
+}
+
+/* Native App Scroll Behavior */
+html, body {
+  overscroll-behavior-y: none; /* Prevents Pull-to-Refresh on Android Chrome */
+}
+
