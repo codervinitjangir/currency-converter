@@ -173,9 +173,16 @@ async function updateExchangeRate() {
     return;
   }
 
+  // Show loading on result input and slider
+  els.result.value = 'Calculating...';
+  UI.showLoading('slider-track');
+
   try {
     const data = await API.fetchLatestRates(state.from);
     
+    // Validate we got rates
+    if (!data || !data.rates) throw new Error('Invalid rate data received');
+
     const rate = data.rates[state.to];
     if (rate) {
       els.rate.textContent = rate.toFixed(4);
@@ -185,26 +192,41 @@ async function updateExchangeRate() {
         const result = rate * state.amount;
         els.result.value = result.toLocaleString(undefined, { maximumFractionDigits: 2 });
       }
+    } else {
+      UI.showToast(`Rate for ${state.to} not found`, 'error');
+      els.result.value = '---';
     }
 
     UI.renderSlider(data.rates, state.currencies);
 
   } catch (err) {
     console.error('Failed to fetch rates', err);
+    UI.showToast('Failed to update rates. Check connection.', 'error');
+    els.result.value = 'Error';
+  } finally {
+    UI.hideLoading('slider-track');
   }
 }
 
 async function loadHistory() {
   if (state.from === state.to) return;
   
+  const chartCard = document.querySelector('.chart-card');
+  UI.showLoading(chartCard.id || 'markets'); // Fallback/use section id
+
   try {
     const data = await API.fetchHistoryData(state.from, state.to, state.historyDays);
     
+    if (!data || !data.rates) throw new Error('Invalid history data');
+
     const labels = Object.keys(data.rates);
     const values = labels.map(date => data.rates[date][state.to]);
     
     UI.updateChart(labels, values);
   } catch (err) {
     console.error('Failed to load history', err);
+    UI.showToast('Could not load market history', 'warning');
+  } finally {
+    UI.hideLoading('markets');
   }
 }

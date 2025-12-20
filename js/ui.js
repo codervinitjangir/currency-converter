@@ -60,16 +60,73 @@ export function renderSlider(rates, currencyNames) {
   els.slider.innerHTML = itemsHtml + itemsHtml; 
 }
 
+// ==========================================
+// Notifications & Loading
+// ==========================================
+
+export function showLoading(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  // Check if loader already exists
+  if (container.querySelector('.loading-overlay')) return;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'loading-overlay';
+  overlay.innerHTML = '<div class="spinner"></div>';
+  
+  // Ensure container is relative for absolute positioning
+  if (getComputedStyle(container).position === 'static') {
+    container.style.position = 'relative';
+  }
+  
+  container.appendChild(overlay);
+}
+
+export function hideLoading(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const overlay = container.querySelector('.loading-overlay');
+  if (overlay) overlay.remove();
+}
+
+export function showToast(message, type = 'info') {
+  let container = document.querySelector('.toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.className = 'toast-container';
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  
+  const icon = type === 'error' ? '🚫' : type === 'success' ? '✅' : 'ℹ️';
+  
+  toast.innerHTML = `<span class="toast-icon">${icon}</span> ${message}`;
+  container.appendChild(toast);
+
+  // Auto remove
+  setTimeout(() => {
+    toast.style.animation = 'fadeOut 0.3s forwards';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
 export function updateNetworkStatus() {
   const badge = document.querySelector('.live-badge');
-  if (!badge) return;
-  
-  if (navigator.onLine) {
-    badge.innerHTML = '● Live Rates';
-    badge.className = 'live-badge';
-  } else {
-    badge.innerHTML = '⚠ Offline Mode';
-    badge.className = 'live-badge offline';
+  const isOnline = navigator.onLine;
+
+  if (badge) {
+    if (isOnline) {
+      badge.innerHTML = '● Live Rates';
+      badge.className = 'live-badge';
+      showToast('You are back online', 'success');
+    } else {
+      badge.innerHTML = '⚠ Offline Mode';
+      badge.className = 'live-badge offline';
+      showToast('No internet connection. Using cached rates.', 'error');
+    }
   }
 }
 
