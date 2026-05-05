@@ -433,7 +433,7 @@ select:focus {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  animation: scrollUp 60s linear infinite; /* Much slower for better readability */
+  animation: scrollUp 120s linear infinite; /* Extremely slow for maximum calmness */
 }
 
 .slider-track:hover {

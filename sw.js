@@ -1,4 +1,4 @@
-const CACHE_NAME = "flux-currency-v5";
+const CACHE_NAME = "flux-currency-v6";
 const ASSETS = [
   "./",
   "index.html",
