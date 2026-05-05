@@ -190,9 +190,12 @@ async function updateExchangeRate() {
     const data = await API.fetchLatestRates(state.from);
     
     // Validate we got rates
-    if (!data || !data.rates) throw new Error('Invalid rate data received');
+    if (!data || !data.rates) {
+      throw new Error('Invalid rate data received');
+    }
 
     const rate = data.rates[state.to];
+
     if (rate) {
       els.rate.textContent = rate.toFixed(4);
       if (state.amount === 0) {
@@ -209,9 +212,17 @@ async function updateExchangeRate() {
     UI.renderSlider(data.rates, state.currencies);
 
   } catch (err) {
-    console.error('Failed to fetch rates', err);
-    UI.showToast('Failed to update rates. Check connection.', 'error');
-    els.result.value = 'Error';
+    console.error('Failed to fetch rates:', err);
+    UI.showToast('Rate update failed. Using cached/offline data.', 'warning');
+    els.result.value = 'Offline';
+    
+    // If we have cached data, we might want to try and recover
+    const cached = await DB.getFromCache(`${API.ALT_API_URL}/${state.from}`);
+    if (cached && cached.data.rates[state.to]) {
+        const rate = cached.data.rates[state.to];
+        els.rate.textContent = rate.toFixed(4) + ' (cached)';
+        els.result.value = (rate * state.amount).toFixed(2);
+    }
   } finally {
     UI.hideLoading('slider-track');
   }
