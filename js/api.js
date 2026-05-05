@@ -3,7 +3,7 @@
 // ==========================================
 
 import { getFromCache, saveToCache, CACHE_TTL } from './db.js';
-export const API_URL = 'https://api.frankfurter.dev';
+export const API_URL = 'https://api.frankfurter.app';
 export const ALT_API_URL = 'https://open.er-api.com/v6/latest';
 
 // Main Fetch Function
