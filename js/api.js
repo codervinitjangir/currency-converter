@@ -56,5 +56,18 @@ export async function fetchHistoryData(from, to, historyDays) {
     start.setDate(start.getDate() - historyDays);
     const startStr = start.toISOString().split('T')[0];
 
-    return fetchWithCache(`${API_URL}/${startStr}..${end}?from=${from}&to=${to}`);
+    const url = `${API_URL}/${startStr}..${end}?from=${from}&to=${to}`;
+    
+    try {
+        // Try direct fetch first
+        return await fetchWithCache(url);
+    } catch (err) {
+        console.warn('Direct history fetch failed, trying proxy...', err);
+        // Fallback to CORS proxy
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+        const res = await fetch(proxyUrl);
+        const json = await res.json();
+        const data = JSON.parse(json.contents);
+        return data;
+    }
 }
