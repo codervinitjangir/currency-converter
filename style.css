@@ -432,8 +432,8 @@ select:focus {
 .slider-track {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  animation: scrollUp 30s linear infinite; /* Slower animation for readability */
+  gap: 0.8rem;
+  animation: scrollUp 60s linear infinite; /* Much slower for better readability */
 }
 
 .slider-track:hover {
@@ -444,11 +444,11 @@ select:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: 0.75rem 1rem;
   background: var(--card-bg);
   border-radius: 12px;
   border: 1px solid var(--glass-border);
-  transition: background 0.3s;
+  transition: background 0.3s, transform 0.2s;
 }
 
 .slider-item:hover {
@@ -479,7 +479,7 @@ select:focus {
   font-family: var(--font-display);
   color: var(--primary);
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 @keyframes scrollUp {
